@@ -1,29 +1,37 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
+// 路由配置
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: "/login",
+    // 除了首页之外的页面都可以用懒加载,@符号代表的src这个目录
+    // .vue这个扩展名可以忽略
+    component: () => import("@/views/Login")
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    // 注册页
+    path: "/register",
+    component: () => import("@/views/Register")
+  },
+  {
+    // 个人中心页
+    path: "/personal",
+    component: () => import("@/views/Personal")
+  },
+  {
+    // 编辑页
+    path: "/editprofile",
+    component: () => import("@/views/EditProfile")
   }
-]
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes
-})
+});
 
-export default router
+export default router;
