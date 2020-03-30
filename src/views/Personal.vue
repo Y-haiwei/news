@@ -42,6 +42,21 @@ export default {
   //注册组件
   components: {
     Listbar
+  },
+  // 组件加载完毕后触发，类似window,onload
+  mounted() {
+    const jsonStr = localStorage.getItem("userInfo");
+    // 吧字符串转成对象，userJson就是用户信息对象
+    const userJson = JSON.parse(jsonStr);
+    this.$axios({
+      url: "/user/" + userJson.user.id,
+      // 添加头信息
+      header: {
+        Authorization: userJson.token
+      }
+    }).then(res => {
+      console.log(res);
+    });
   }
 };
 </script>
