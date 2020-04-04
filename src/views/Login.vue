@@ -27,7 +27,9 @@
       />
       <div style="margin: 16px;">
         <!-- 如果这个按钮是在van-form组件内部， -->
-        <van-button round block type="info" native-type="submit">登录</van-button>
+        <van-button round block type="info" native-type="submit"
+          >登录</van-button
+        >
       </div>
     </van-form>
     <router-link to="/register">
@@ -67,7 +69,7 @@ export default {
         // 使用vant的弹窗提示
         this.$toast.success(message);
         // 把token保存到本地
-        // localStorage只能保存字符串，需要使用JSON.stringify来把对象转换成字符串
+        // localStorage只能保存字符串，需要使用JSON.stringify来吧对象转换成字符串
         localStorage.setItem("userInfo", JSON.stringify(data));
         // 跳转到个人中心页
         this.$router.push("/personal");
