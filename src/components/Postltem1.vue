@@ -4,16 +4,19 @@
 
     <div class="imgText">
       <div class="imgText-left">
-        <h4>asdas</h4>
-        <p>asdas</p>
+        <h4>{{ data.title}}</h4>
+        <p>{{data.user.nicknam}} {{data.comment_length}}跟帖</p>
       </div>
-      <img src="#" alt />
+      <img :src="$axios.default.baseURL+data.cover[0].url" />
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  // 传入文章的数据
+  props: ["data"]
+};
 </script>
 
 <style scoped lang="less">

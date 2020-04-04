@@ -1,17 +1,21 @@
 <template>
   <div class="video">
-    <h4>asdsad</h4>
+    <h4>{{data.title}}</h4>
     <div class="cover">
-      <img src="#" alt />
+      <img :src="$axios.default.baseURL+data.cover[0].url" />
       <div class="cover-layer">
         <span class="iconfont iconicon_shipin"></span>
       </div>
     </div>
+    <p>{{data.user.nicknam}} {{data.comment_length}}跟帖</p>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  // 传入文章的数据
+  props: ["data"]
+};
 </script>
 
 <style scoped lang="less">

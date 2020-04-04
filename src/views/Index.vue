@@ -17,17 +17,27 @@
     <!-- sticky：是否使用粘性定位布局 -->
     <!-- swipeable: 是否开启手势滑动切换 -->
     <van-tabs v-model="active" sticky swipeable>
-      <van-tab v-for="(item, index) in categories" :key="index" :title="item">
+      <van-tab v-for="(item, index) in categories" :key="index" :title="item.name">
         <!-- 下拉刷新 -->
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <!-- van的列表组件 -->
           <!-- @load 滚动到底部时候触发的函数 -->
           <van-list v-model="loading" :finished="finished" finished-text="我也是有底线的" @load="onLoad">
             <!-- 假设list是后台返回的数组，里有10个元素 -->
+
             <div v-for="(item, index) in list" :key="index">
               <!-- 只有单张图片的 -->
-              <PostItem1 />
-              {{index}}
+
+              <Postltem1
+                v-if="item.type === 1 && item.cover.length > 0 && item.cover.length < 3 "
+                :data="item"
+              />
+
+              <!-- 大于等于3张图片的 -->
+              <Postltem2 v-if="item.type === 1 && item.cover.length >= 3" :data="item" />
+
+              <!-- 视频 -->
+              <Postltem3 v-if="item.type ===2" :data="item" />
             </div>
           </van-list>
         </van-pull-refresh>
@@ -38,35 +48,38 @@
 
 <script>
 // 文章列表的组件,只有单张图片的
-import PostItem1 from "@/components/Postltem1";
+import Postltem1 from "@/components/Postltem1";
 // 大于等于3张图片的组件
-import PostItem2 from "@/components/Postltem2";
+import Postltem2 from "@/components/Postltem2";
 // 视频的列表组件
-import PostItem3 from "@/components/Postltem3";
+import Postltem3 from "@/components/Postltem3";
 
 export default {
   data() {
     return {
       // 菜单的数据
-      categories: [
-        "关注",
-        "娱乐",
-        "体育",
-        "汽车",
-        "房产",
-        "关注",
-        "关注",
-        "娱乐",
-        "体育",
-        "汽车",
-        "房产",
-        "关注",
-        "∨"
-      ],
+      // categories: [
+      //   "关注",
+      //   "娱乐",
+      //   "体育",
+      //   "汽车",
+      //   "房产",
+      //   "关注",
+      //   "关注",
+      //   "娱乐",
+      //   "体育",
+      //   "汽车",
+      //   "房产",
+      //   "关注",
+      //   "∨"
+      // ],
+      categories: [],
       // 记录当前tab的切换的索引
       active: 0,
       // 假设这个数组是后台返回的数据
-      list: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 10个1
+      // 记录当前的栏目的id
+      categoryID: 999,
+      list: [], // 10个1
       loading: false, // 是否正在加载中
       finished: false, // 是否已经加载完毕
       refreshing: false // 是否正在下拉加载
@@ -83,28 +96,79 @@ export default {
     }
   },
   components: {
-    PostItem1,
-    PostItem2,
-    PostItem3
+    Postltem1,
+    Postltem2,
+    Postltem3
+  },
+  mounted() {
+    // 在请求之前，应该先判断本地有没有栏目的数据
+    const categories = JSON.parse(localStorage.getItem("categories"));
+    const { token } = JSON.parse(localStorage.getItem("userInfo")) || {};
+
+    if (categories) {
+      if (categories[0].name !== "关注" && token) {
+        // 获取栏目的数据
+        this.getCategories(token);
+        return;
+      }
+      if (!token && categories[0].name === "关注") {
+        this.getCategories();
+        return;
+      }
+
+      this.categories = categories;
+    } else {
+      // 获取栏目数据
+      this.getCategories(token);
+    }
+    // 请求文章列表，页面一开始都是请求头条栏目下的文章，头条栏目id是999
+    this.$axios({
+      url: "/post",
+      // params就是url问好后面的参数
+      params: {
+        category: 999
+      }
+    }).then(res => {
+      const { data } = res.data;
+      // console.log(res);
+      this.list = data;
+    });
   },
   methods: {
+    getCategories(token) {
+      const config = {
+        url: "/category"
+      };
+      if (token) {
+        config.headers = { Authorization: token };
+      }
+      // 获取栏目的数据
+      this.$axios(config).then(res => {
+        const { data } = res.data;
+        data.push({
+          name: "∨"
+        });
+        this.categories = data;
+        // 把菜单的数据保存到本地
+        localStorage.setItem("categories", JSON.stringify(data));
+      });
+    },
     onLoad() {
-      console.log("已经拖动到了底部");
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(1);
-        }
-
-        // 加载状态结束
-        this.loading = false;
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 5000);
+      // 加班下一页的数据
+      // // console.log("已经拖动到了底部");
+      // // 异步更新数据
+      // // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.list.push(1);
+      //   }
+      //   // 加载状态结束
+      //   this.loading = false;
+      //   // 数据全部加载完成
+      //   if (this.list.length >= 40) {
+      //     this.finished = true;
+      //   }
+      // }, 5000);
     },
     onRefresh() {
       // 表示加载完毕

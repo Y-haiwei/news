@@ -2,16 +2,24 @@
   <div>
     <!-- 循环结构 大于3张图片的布局 -->
     <div class="imgList">
-      <h4>sadasd</h4>
+      <h4>{{data.title}}</h4>
       <div class="images">
-        <img src="#" alt v-for="(item,index) in [0,1,2]" :key="index" />
+        <img
+          v-for="(item,index) in data.cover"
+          :key="index"
+          :src="$axios.default.baseURL + item.url"
+        />
       </div>
     </div>
+    <p>{{data.user.nicknam}} {{data.comment_length}}跟帖</p>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  // 传入文章的数据
+  props: ["data"]
+};
 </script>
 
 <style scoped lang="less">
