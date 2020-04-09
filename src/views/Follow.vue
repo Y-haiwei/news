@@ -5,13 +5,13 @@
 
     <!-- 要循环的结构 -->
 
-    <div class="user-item" v-for="(item,index ) in follows" :key="index">
-      <img :src="$axios.default.baseURL+ item.head_img" alt />
+    <div class="user-item" v-for="(item, index) in follows" :key="index">
+      <img :src="$axios.default.baseURL + item.head_img" alt />
       <div class="user-info">
         <div>{{ item.nickname }}</div>
-        <p>{{ moment (item.create_date) .format("YYYY-MM-DD hh:mm:ss") }}</p>
+        <p>{{ moment(item.create_date).format("YYYY-MM-DD hh:mm:ss") }}</p>
       </div>
-      <span class="cencel" @click="hancleCancel(item.id,index)">取消关注</span>
+      <span class="cencel" @click="hancleCancel(item.id, index)">取消关注</span>
     </div>
   </div>
 </template>
@@ -24,11 +24,11 @@ export default {
     return {
       // 我的关注列表
       follows: [],
-      moment
+      moment,
     };
   },
   components: {
-    NavigateBaer
+    NavigateBaer,
   },
   mounted() {
     // 获取token
@@ -39,9 +39,9 @@ export default {
     this.$axios({
       url: "/user_follows",
       headers: {
-        Authorization: localUserJson.token
-      }
-    }).then(res => {
+        Authorization: localUserJson.token,
+      },
+    }).then((res) => {
       // data就是我的关注的用户列表
       const { data } = res.data;
       // 保存到data中的关注列表
@@ -53,22 +53,22 @@ export default {
       this.$dialog
         .confirm({
           title: "提示",
-          message: "确定取消关注吗？"
+          message: "确定取消关注吗？",
         })
         .then(() => {
           this.$axios({
             url: "/user_unfollow/" + id,
             headers: {
-              Authorization: this.localUserJson.token
-            }
-          }).then(res => {
+              Authorization: this.localUserJson.token,
+            },
+          }).then((res) => {
             this.$toast.success("取消关注成功");
             // 刷新页面
             this.follows.splice(index, 1);
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

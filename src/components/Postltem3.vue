@@ -1,20 +1,23 @@
 <template>
-  <div class="video">
-    <h4>{{data.title}}</h4>
-    <div class="cover">
-      <img :src="$axios.default.baseURL+data.cover[0].url" />
-      <div class="cover-layer">
-        <span class="iconfont iconicon_shipin"></span>
+  <router-link :to="`/video/${data.id}`">
+    <div class="video">
+      <h4>{{ data.title }}</h4>
+      <div class="cover">
+        <!-- 封面图片 -->
+        <img :src="$axios.default.baseURL + data.cover[0].url" />
+        <div class="cover-layer">
+          <span class="iconfont iconicon_shipin"></span>
+        </div>
       </div>
+      <p>{{ data.user.nickname }} {{ data.comment_length }}跟帖</p>
     </div>
-    <p>{{data.user.nicknam}} {{data.comment_length}}跟帖</p>
-  </div>
+  </router-link>
 </template>
 
 <script>
 export default {
   // 传入文章的数据
-  props: ["data"]
+  props: ["data"],
 };
 </script>
 
@@ -29,26 +32,41 @@ export default {
     overflow: hidden;
     font-weight: normal;
   }
+
   .cover {
     width: 100%;
     height: 170/360 * 100vw;
     position: relative;
+    margin: 20/360 * 100vw 0;
+
     img {
       display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      .cover-layer {
-        width: 55/360 * 100vw;
-        height: 55/360 * 100vw;
-        background: rbga(0, 0, 0, 0.5);
-        border-radius: 50%;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-27/360 * 100vw) translateY(-27/360 * 100vw);
+    }
+
+    .cover-layer {
+      width: 55/360 * 100vw;
+      height: 55/360 * 100vw;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-27/360 * 100vw) translateY(-27/360 * 100vw);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .iconshipin {
+        color: #fff;
+        font-size: 32px;
       }
     }
+  }
+  p {
+    color: #999;
+    margin-top: 5px;
   }
 }
 </style>

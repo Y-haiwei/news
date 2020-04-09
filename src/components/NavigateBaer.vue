@@ -1,13 +1,15 @@
 <template>
+  <!-- 顶部的导航条 -->
   <div class="navigate-bar">
-    <!-- 顶部的导航条 -->
-    <div class="navigate-bar">
-      <span class="iconfont iconjiantou-copy" @click="$router.back()"></span>
-      <strong>{{ title }}</strong>
-      <span class="iconfont iconicon_shouye" @click="$router.push('/')" v-if="showHome"></span>
-      <!-- v-else指令是要接着v-if后面来使用 -->
-      <span v-else class="iconfont iconshouye" style="opacity:0"></span>
-    </div>
+    <span class="iconfont iconjiantou-copy" @click="$router.back()"></span>
+    <strong>{{ title }}</strong>
+    <span
+      class="iconfont iconicon_shouye"
+      @click="$router.push('/')"
+      v-if="showHome"
+    ></span>
+    <!-- v-else指令是要接着v-if后面来使用 -->
+    <span v-else class="iconfont iconicon_shouye" style="opacity:0"></span>
   </div>
 </template>
 
@@ -15,7 +17,7 @@
 export default {
   // 组件传值，展示的文字和是否展示首页的图标
   // showHome是布尔值，
-  props: ["title", "showHome"]
+  props: ["title", "showHome"],
 };
 </script>
 
